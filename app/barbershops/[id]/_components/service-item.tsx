@@ -11,11 +11,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { generateDayTimeList } from '../_helpers/hours';
 import { Barbershop, Booking, Service } from '@prisma/client';
 import { format, setHours, setMinutes } from 'date-fns';
-import { saveBooking } from '../actions/save-booking';
+import { saveBooking } from '../_actions/save-booking';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { getDayBookings } from '../actions/get-day-bookings';
+import { getDayBookings } from '../_actions/get-day-bookings';
 
 interface ServiceItemProps {
   service: Service;

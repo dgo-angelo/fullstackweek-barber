@@ -4,7 +4,6 @@ import { authOptions } from '../api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import { db } from '../_lib/prisma';
 import BookingItem from '../_components/booking-item';
-import { isFuture, isPast } from 'date-fns';
 
 const BookingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -44,13 +43,16 @@ const BookingsPage = async () => {
       <div className='px-5 py-6'>
         <h1 className='text-xl font-bold'>Agendamentos</h1>
 
-        <h2 className='mt-6 mb-3 uppercase text-gray-400 text-sm font-bold'>Confirmados</h2>
+        {confirmedBookings.length > 0 && <h2 className='mt-6 mb-3 uppercase text-gray-400 text-sm font-bold'>Confirmados</h2>}
+
         <div className='flex flex-col gap-3'>
           {confirmedBookings.map((booking) => (
             <BookingItem key={booking.id} booking={booking} />
           ))}
         </div>
-        <h2 className='mt-6 mb-3 uppercase text-gray-400 text-sm font-bold'>Finalizados</h2>
+
+        {finishedBookings.length > 0 && <h2 className='mt-6 mb-3 uppercase text-gray-400 text-sm font-bold'>Finalizados</h2>}
+
         <div className='flex flex-col gap-3'>
           {finishedBookings.map((booking) => (
             <BookingItem key={booking.id} booking={booking} />
