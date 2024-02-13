@@ -5,12 +5,14 @@ import { Card, CardContent } from '@/app/_components/ui/card';
 import { Sheet, SheetTrigger, SheetContent, SheetTitle, SheetHeader, SheetFooter } from '@/app/_components/ui/sheet';
 
 import { ptBR } from 'date-fns/locale/pt-BR';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { generateDayTimeList } from '../_helpers/hours';
 import { Barbershop, Service } from '@prisma/client';
-import { format } from 'date-fns';
+import { format, setHours, setMinutes } from 'date-fns';
+import { saveBooking } from '../actions/save-booking';
+import { Loader2 } from 'lucide-react';
 
 interface ServiceItemProps {
   service: Service;
@@ -18,8 +20,10 @@ interface ServiceItemProps {
   isAuthenticated?: boolean;
 }
 const ServiceItem = ({ service, isAuthenticated, barbershop }: ServiceItemProps) => {
+  const { data } = useSession();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [hour, setHour] = useState<string | undefined>();
+  const [submitIsLoading, setSubmitIsLoading] = useState(false);
 
   const handleDateClick = (date: Date | undefined) => {
     setDate(date);
@@ -35,6 +39,28 @@ const ServiceItem = ({ service, isAuthenticated, barbershop }: ServiceItemProps)
     }
   };
 
+  const handleBookingSubmit = async () => {
+    setSubmitIsLoading(true);
+    try {
+      if (!hour || !date || !data?.user) {
+        return;
+      }
+
+      const dateHour = Number(hour.split(':')[0]);
+      const dateMinutes = Number(hour.split(':')[1]);
+      const newDate = setMinutes(setHours(date, dateHour), dateMinutes);
+      await saveBooking({
+        serviceId: service.id,
+        barbershopId: barbershop.id,
+        date: newDate,
+        userId: (data.user as any).id,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSubmitIsLoading(false);
+    }
+  };
   const timeList = useMemo(() => {
     return date ? generateDayTimeList(date) : [];
   }, [date]);
@@ -66,11 +92,11 @@ const ServiceItem = ({ service, isAuthenticated, barbershop }: ServiceItemProps)
                   </SheetHeader>
                   <div className='py-6'>
                     <Calendar
-                      fromDate={new Date()}
                       mode='single'
                       selected={date}
                       onSelect={handleDateClick}
                       locale={ptBR}
+                      fromDate={new Date()}
                       styles={{
                         head_cell: {
                           width: '100%',
@@ -79,7 +105,7 @@ const ServiceItem = ({ service, isAuthenticated, barbershop }: ServiceItemProps)
                         cell: {
                           width: '100%',
                         },
-                        day: {
+                        button: {
                           width: '100%',
                         },
                         nav_button_previous: {
@@ -141,7 +167,8 @@ const ServiceItem = ({ service, isAuthenticated, barbershop }: ServiceItemProps)
                     </Card>
                   </div>
                   <SheetFooter className='px-5'>
-                    <Button disabled={!hour || !date} className='w-full'>
+                    <Button disabled={!hour || !date || submitIsLoading} className='w-full' onClick={handleBookingSubmit}>
+                      {submitIsLoading && <Loader2 className='mr-2 h-6 w-6 animate-spin' />}
                       Confirmar reserva
                     </Button>
                   </SheetFooter>
