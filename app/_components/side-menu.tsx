@@ -11,7 +11,10 @@ const SideMenu = () => {
   const { data } = useSession();
 
   const handleLogoutClick = async () => await signOut();
-  const handleLoginClick = async () => await signIn('google');
+  const handleLoginClick = async () =>
+    await signIn('google', undefined, {
+      prompt: 'select_account',
+    });
 
   return (
     <>
