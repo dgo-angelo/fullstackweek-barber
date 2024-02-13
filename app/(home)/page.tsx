@@ -11,8 +11,9 @@ import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  const [barbershops, confirmedBookings] = await Promise.all([
+  const [barbershops, recommendedBarbershops, confirmedBookings] = await Promise.all([
     await db.barbershop.findMany(),
+    await db.barbershop.findMany({ orderBy: { id: 'asc' } }),
     session?.user
       ? await db.booking.findMany({
           where: {
@@ -70,7 +71,7 @@ export default async function Home() {
       <div className='mt-6'>
         <h2 className='px-5 text-xs uppercase text-gray-400 font-bold mb-3'>Recomendados</h2>
         <div className='flex gap-2 px-5 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
-          {barbershops.map((barbershop: Barbershop) => (
+          {recommendedBarbershops.map((barbershop: Barbershop) => (
             <div className='min-w-[167px] min-h-[167px]' key={barbershop.id}>
               <BarbershopItem barbershop={barbershop} />
             </div>
