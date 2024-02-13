@@ -1,4 +1,4 @@
-import { format, isFuture } from 'date-fns';
+import { format } from 'date-fns';
 import Header from '../_components/header';
 import { ptBR } from 'date-fns/locale';
 import Search from './_components/search';
@@ -71,7 +71,9 @@ export default async function Home() {
         <h2 className='px-5 text-xs uppercase text-gray-400 font-bold mb-3'>Recomendados</h2>
         <div className='flex gap-2 px-5 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
           {barbershops.map((barbershop: Barbershop) => (
-            <BarbershopItem barbershop={barbershop} key={barbershop.id} />
+            <div className='min-w-[167px] min-h-[167px]' key={barbershop.id}>
+              <BarbershopItem barbershop={barbershop} />
+            </div>
           ))}
         </div>
       </div>
@@ -79,7 +81,9 @@ export default async function Home() {
         <h2 className='px-5 text-xs uppercase text-gray-400 font-bold mb-3'>Populares</h2>
         <div className='flex gap-2 px-5 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
           {barbershops.map((barbershop: Barbershop) => (
-            <BarbershopItem barbershop={barbershop} key={barbershop.id} />
+            <div className='min-w-[167px] min-h-[167px]' key={barbershop.id}>
+              <BarbershopItem barbershop={barbershop} />
+            </div>
           ))}
         </div>
       </div>

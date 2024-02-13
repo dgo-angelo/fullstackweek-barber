@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Badge } from '@/app/_components/ui/badge';
 import { Button } from '@/app/_components/ui/button';
 import { Card, CardContent } from '@/app/_components/ui/card';
@@ -17,8 +17,8 @@ const BarbershopItem = ({ barbershop }: BarbershopItemprops) => {
     router.push(`/barbershops/${barbershop.id}`);
   };
   return (
-    <Card className='min-w-[167px] max-w-[167px] rounded-2xl'>
-      <CardContent className='px-1 py-0'>
+    <Card className='min-w-full max-w-full rounded-2xl'>
+      <CardContent className='px-1 py-0 pt-1'>
         <div className='px-1 relative w-full h-[159px]'>
           <div className='absolute top-2 left-2 z-50'>
             <Badge className='flex gap-2 items-center opacity-90' variant='secondary'>
