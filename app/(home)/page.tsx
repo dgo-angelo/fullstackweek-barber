@@ -42,12 +42,14 @@ export default async function Home() {
         },
       })
     : Promise.resolve([]);
+
+  const welcomeMessage = session?.user ? `Olá, ${session.user.name?.split(' ')[0]}` : 'Olá! Vamos agendar um corte hoje?';
   return (
     <div>
       <Header />
       <div className='px-5 pt-5'>
-        <h2 className='text-xl font-bold'>Olá, Diego</h2>
-        <p className='capitalize'>{format(new Date(), "EEEE',' dd 'de' MMMM", { locale: ptBR })}</p>
+        <h2 className='text-xl font-bold'>{welcomeMessage}</h2>
+        <p className='capitalize text-sm'>{format(new Date(), "EEEE',' dd 'de' MMMM", { locale: ptBR })}</p>
       </div>
       <div className='px-5 mt-6'>
         <Search />
